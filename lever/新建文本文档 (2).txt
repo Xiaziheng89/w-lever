@@ -1,0 +1,90 @@
+clear;
+clc;
+
+data=load('biomed.txt');
+[l,r]=size(data);
+L=l;
+p=[];
+Fmeasure=[];fm=1;
+c=pdist(data);
+s=squareform(c);
+[a,b]=sort(s,2);
+for k=5:1:200
+k
+aa=a(:,2:k+1);
+dist=sum(aa,2);
+knn=b(:,2:k+1);
+
+for i=1:l
+ sum1=0;sum2=0
+ for j=1:k
+for kk=1:r
+         locate=knn(i,j);
+           sum1=sum1+abs(data(locate,kk)-data(i,kk));
+         end  
+        
+     
+    end
+    p(i)=sum1;
+
+end 
+  [a1,b1]=sort(dist',2);
+[a2,b2]=sort(p,2);
+
+     for nn=1:1:L
+      
+       n=a1(1,nn);
+       
+         for mm=1:1:L
+             
+             m=a2(1,mm);
+jj=1;
+
+gg=[];
+for i=1:L
+   
+   if dist(i)<n&&p(i)>m
+          gg(jj)=i;
+            jj=jj+1;
+       
+    end
+end
+
+
+
+cid=[13,25,46,47,51,57,55,22,72,4,6,28,35,59,48,71,11,66,197,21,32,63,12,62,23,24,65,172,64,14];
+[l4,r4]=size(gg);
+[l5,r5]=size(cid);
+count=0;
+for i=1:r4
+    for j=1:r5
+        if gg(i)==cid(j)
+            count=count+1;
+        end
+    end
+    
+end
+% r4为检出的边界个数；
+% count为检出的正确边界个数；
+
+if count==0
+    Fmeasure(fm,:)=0;
+   
+else
+     right=count/r4;
+   call=count/r5;
+Fmeasure(fm,1)=r4;
+Fmeasure(fm,2)=count;
+Fmeasure(fm,3)=right;
+Fmeasure(fm,4)=call;
+Fmeasure(fm,5)=2/(1/right+1/call);
+
+
+end
+fm=fm+1;
+        end
+     end
+
+end
+
+
